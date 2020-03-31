@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 
+	"github.com/BurntSushi/toml"
 	"github.com/gorilla/mux"
 )
 
@@ -24,6 +26,19 @@ type state struct {
 	Flashed int `json:"flashed"`
 }
 
+type tomlConfig struct {
+	Port       string
+	BotAddress string
+	Player     struct {
+		State struct {
+			Burning []string
+			Flashed []string
+		}
+	}
+}
+
+var config tomlConfig
+
 func homeLink(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Pong!")
 }
@@ -38,9 +53,9 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dst := new(bytes.Buffer)
-	json.Indent(dst, reqBody, "", "  ")
-	fmt.Println(dst.String())
+	// dst := new(bytes.Buffer)
+	// json.Indent(dst, reqBody, "", "  ")
+	// fmt.Println(dst.String())
 
 	if reqBody == nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -56,21 +71,21 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if newEvent.Player.State.Burning > 0 {
-		fmt.Println("pegou fogo!")
+		sound := config.Player.State.Burning[rand.Intn(len(config.Player.State.Burning))]
 		requestBody, _ := json.Marshal(map[string]string{
-			"url": "https://www.myinstants.com/media/sounds/pegando-fogo-bicho.mp3",
+			"url": sound,
 		})
 
-		http.Post("http://localhost:9001/bot/play", "application/json", bytes.NewBuffer(requestBody))
+		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
 	}
 
 	if newEvent.Player.State.Flashed > 50 {
-		fmt.Println("ceguin!")
+		sound := config.Player.State.Flashed[rand.Intn(len(config.Player.State.Flashed))]
 		requestBody, _ := json.Marshal(map[string]string{
-			"url": "https://www.myinstants.com/media/sounds/derruba.mp3",
+			"url": sound,
 		})
 
-		http.Post("http://localhost:9001/bot/play", "application/json", bytes.NewBuffer(requestBody))
+		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -78,8 +93,13 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	if _, err := toml.DecodeFile("config.toml", &config); err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/bot", receiveEvent).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":"+config.Port, router))
 }
