@@ -8,6 +8,7 @@ type TomlConfig struct {
 		State struct {
 			Burning []string
 			Flashed []string
+			Dead    []string
 		}
 	}
 }
@@ -26,4 +27,5 @@ type Player struct {
 type State struct {
 	Burning int `json:"burning"`
 	Flashed int `json:"flashed"`
+	Health  int `json:"health"`
 }

@@ -13,3 +13,9 @@ bot_address = "http://localhost:9001/bot/play"
             "https://www.myinstants.com/media/sounds/derruba2.mp3",
             "https://www.myinstants.com/media/sounds/derruba3.mp3",
         ]
+        dead = [
+            "https://www.myinstants.com/media/sounds/untitled_339.mp3",
+            "https://www.myinstants.com/media/sounds/e-morreu-v2.mp3",
+            "https://www.myinstants.com/media/sounds/morreu_zorratotal.mp3",
+            "https://www.myinstants.com/media/sounds/morri_1_1.mp3",
+        ]

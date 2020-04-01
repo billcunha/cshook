@@ -60,6 +60,16 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
 	}
 
+	if newEvent.Player.State.Health == 0 {
+		sound := config.Player.State.Dead[rand.Intn(len(config.Player.State.Dead))]
+		fmt.Println(sound)
+		requestBody, _ := json.Marshal(map[string]string{
+			"url": sound,
+		})
+
+		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	}
+
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "ok")
 }
