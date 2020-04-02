@@ -3,7 +3,7 @@ package main
 // TomlConfig ...
 type TomlConfig struct {
 	Port       string
-	BotAddress string
+	BotAddress string `toml:"bot_address"`
 	Player     struct {
 		State struct {
 			Burning []string
