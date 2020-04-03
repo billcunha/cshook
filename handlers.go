@@ -23,9 +23,9 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// dst := new(bytes.Buffer)
-	// json.Indent(dst, reqBody, "", "  ")
-	// fmt.Println(dst.String())
+	dst := new(bytes.Buffer)
+	json.Indent(dst, reqBody, "", "  ")
+	logger.Println(dst.String())
 
 	if reqBody == nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -60,7 +60,7 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
 	}
 
-	if newEvent.Player.State.Health == 0 {
+	if newEvent.Previously.Player.State.Health > 0 && newEvent.Player.State.Health == 0 {
 		sound := config.Player.State.Dead[rand.Intn(len(config.Player.State.Dead))]
 		fmt.Println(sound)
 		requestBody, _ := json.Marshal(map[string]string{

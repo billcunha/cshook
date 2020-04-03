@@ -15,12 +15,18 @@ type TomlConfig struct {
 
 // Event ... Root CS event
 type Event struct {
-	Player Player `json:"player"`
+	Player     Player     `json:"player"`
+	Previously Previously `json:"previously"`
 }
 
 // Player ...
 type Player struct {
 	State State `json:"state"`
+}
+
+// Previously ...
+type Previously struct {
+	Player Player `json:"player"`
 }
 
 // State ...
