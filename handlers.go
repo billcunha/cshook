@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 )
 
@@ -19,7 +18,7 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "Kindly enter data with the event title and description only in order to update")
+		fmt.Fprintf(w, "Awesome fail")
 		return
 	}
 
@@ -29,7 +28,7 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 
 	if reqBody == nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "You need to send some data...")
+		fmt.Fprintf(w, "You need to send some data")
 		return
 	}
 
@@ -40,35 +39,20 @@ func receiveEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if newEvent.Player.State.Burning > 0 {
-		sound := config.Player.State.Burning[rand.Intn(len(config.Player.State.Burning))]
-		fmt.Println(sound)
-		requestBody, _ := json.Marshal(map[string]string{
-			"url": sound,
-		})
-
-		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	// Disable all events from other players
+	if newEvent.Provider.Steamid != newEvent.Player.Steamid {
+		return
 	}
 
-	if newEvent.Player.State.Flashed > 50 {
-		sound := config.Player.State.Flashed[rand.Intn(len(config.Player.State.Flashed))]
-		fmt.Println(sound)
-		requestBody, _ := json.Marshal(map[string]string{
-			"url": sound,
-		})
-
-		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	// Disable all events from other places
+	if newEvent.Player.Activity != "playing" {
+		return
 	}
 
-	if newEvent.Previously.Player.State.Health > 0 && newEvent.Player.State.Health == 0 {
-		sound := config.Player.State.Dead[rand.Intn(len(config.Player.State.Dead))]
-		fmt.Println(sound)
-		requestBody, _ := json.Marshal(map[string]string{
-			"url": sound,
-		})
-
-		http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
-	}
+	CheckBurning(newEvent)
+	CheckFlashed(newEvent)
+	CheckDead(newEvent)
+	CheckHeadShot(newEvent)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "ok")

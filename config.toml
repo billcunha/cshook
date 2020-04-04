@@ -1,21 +1,24 @@
 port = "8181"
 bot_address = "http://localhost:9001/bot/play"
 
-[player]
-    [player.state]
-        burning = [
-            "https://www.myinstants.com/media/sounds/pegando-fogo-bicho.mp3",
-            "https://www.myinstants.com/media/sounds/pegando-fogo-bicho2.mp3",
-            "https://www.myinstants.com/media/sounds/pegando-fogo-bicho3.mp3",
-        ]
-        flashed = [
-            "https://www.myinstants.com/media/sounds/derruba.mp3",
-            "https://www.myinstants.com/media/sounds/derruba2.mp3",
-            "https://www.myinstants.com/media/sounds/derruba3.mp3",
-        ]
-        dead = [
-            "https://www.myinstants.com/media/sounds/untitled_339.mp3",
-            "https://www.myinstants.com/media/sounds/e-morreu-v2.mp3",
-            "https://www.myinstants.com/media/sounds/morreu_zorratotal.mp3",
-            "https://www.myinstants.com/media/sounds/morri_1_1.mp3",
-        ]
+burning = [
+    "https://www.myinstants.com/media/sounds/pegando-fogo-bicho.mp3",
+    "https://www.myinstants.com/media/sounds/pegando-fogo-bicho2.mp3",
+    "https://www.myinstants.com/media/sounds/pegando-fogo-bicho3.mp3",
+]
+flashed = [
+    "https://www.myinstants.com/media/sounds/derruba.mp3",
+    "https://www.myinstants.com/media/sounds/derruba2.mp3",
+    "https://www.myinstants.com/media/sounds/derruba3.mp3",
+]
+dead = [
+    "https://www.myinstants.com/media/sounds/untitled_339.mp3",
+    "https://www.myinstants.com/media/sounds/e-morreu-v2.mp3",
+    "https://www.myinstants.com/media/sounds/morreu_zorratotal.mp3",
+    "https://www.myinstants.com/media/sounds/morri_1_1.mp3",
+]
+
+Headshot = [
+    "https://www.myinstants.com/media/sounds/lucas1-que-ota-rem.mp3",
+    "https://www.myinstants.com/media/sounds/boltz.mp3",
+]
