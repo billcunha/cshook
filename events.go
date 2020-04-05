@@ -14,13 +14,8 @@ func CheckBurning(event Event) {
 		return
 	}
 
-	sound := config.Burning[rand.Intn(len(config.Burning))]
-	fmt.Println(sound)
-	requestBody, _ := json.Marshal(map[string]string{
-		"url": sound,
-	})
-
-	http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	sound := getSound(config.Burning)
+	sendRequest(sound)
 }
 
 // CheckFlashed ...
@@ -29,13 +24,8 @@ func CheckFlashed(event Event) {
 		return
 	}
 
-	sound := config.Flashed[rand.Intn(len(config.Flashed))]
-	fmt.Println(sound)
-	requestBody, _ := json.Marshal(map[string]string{
-		"url": sound,
-	})
-
-	http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	sound := getSound(config.Flashed)
+	sendRequest(sound)
 }
 
 // CheckDead ...
@@ -44,13 +34,8 @@ func CheckDead(event Event) {
 		return
 	}
 
-	sound := config.Dead[rand.Intn(len(config.Dead))]
-	fmt.Println(sound)
-	requestBody, _ := json.Marshal(map[string]string{
-		"url": sound,
-	})
-
-	http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
+	sound := getSound(config.Dead)
+	sendRequest(sound)
 }
 
 // CheckHeadShot ...
@@ -61,15 +46,22 @@ func CheckHeadShot(event Event) {
 
 	for key, value := range event.Previously.Player.Weapons {
 		if (value.AmmoClip + 1) == event.Player.Weapons[key].AmmoClip {
-			sound := config.Headshot[rand.Intn(len(config.Headshot))]
-			fmt.Println(sound)
-			requestBody, _ := json.Marshal(map[string]string{
-				"url": sound,
-			})
-
-			http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
-
+			sound := getSound(config.Headshot)
+			sendRequest(sound)
 			return
 		}
 	}
+}
+
+func getSound(sounds []string) string {
+	return sounds[rand.Intn(len(sounds))]
+}
+
+func sendRequest(sound string) {
+	fmt.Println(sound)
+	requestBody, _ := json.Marshal(map[string]string{
+		"url": sound,
+	})
+
+	http.Post(config.BotAddress, "application/json", bytes.NewBuffer(requestBody))
 }
